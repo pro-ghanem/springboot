@@ -85,6 +85,47 @@ class MyRunner6 implements CommandLineRunner {
 }
 This bean is executed for either dev or prod profiles (or both). What message is outputed depends on which profile was loaded last.
 
+
+
+
+
+# Example OF using Bean
+
+A simple PropertyPlaceholderConfigurer example
+
+Declare a PropertyPlaceholderConfigurer bean in Spring’s application context file as follows:
+```
+<bean id="mailProperties"
+    class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+ 
+    <property name="location" value="classpath:mail.properties" />
+ 
+</bean>
+
+```
+That tells Spring to load the properties file named “mail.properties” in the classpath to resolve any placeholders ${…} found. An exception will be thrown if Spring could not find the specified properties file. The properties file has the following entries:
+
+```
+smtp.host=smtp.gmail.com
+smtp.port=587
+smtp.user=tom@gmail.com
+smtp.pass=secret
+```
+And the following bean declaration uses some placeholders which will be resolved by Spring:
+```
+<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+    <property name="host" value="${smtp.host}" />
+    <property name="port" value="${smtp.port}" />
+    <property name="username" value="${smtp.user}" />
+    <property name="password" value="${smtp.pass}" />
+</bean>
+```
+Spring will replace these placeholders by actual values of the corresponding entries in the properties file. An exception will be thrown if a placeholder could not be resolved, e.g there is no entry with the specified key.
+
+
+
+
+
 # Some Terms
 
 Bean: is an object, which is created, managed and destroyed in Spring Container. We can inject an object into the Spring Container through the metadata(either xml or annotation), which is called inversion of control.
